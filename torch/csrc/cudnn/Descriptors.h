@@ -51,7 +51,11 @@ struct TensorDescriptor
   void set(const at::Tensor &t, int pad = 0) {
     int dim = t.ndimension();
     if (dim > CUDNN_DIM_MAX || pad > CUDNN_DIM_MAX)
-      throw std::runtime_error("cuDNN supports only up to " #CUDNN_DIM_MAX " dimensions");
+#define _STR(X) #X
+#define STR(X) _STR(X)
+      throw std::runtime_error("cuDNN supports only up to " STR(CUDNN_DIM_MAX) " dimensions");
+#undef _STR
+#undef STR
     int size[CUDNN_DIM_MAX];
     int stride[CUDNN_DIM_MAX];
     for (int i = 0; i < dim; ++i) {

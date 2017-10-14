@@ -25,9 +25,9 @@ variable_list SoftmaxBase<is_log>::apply(const variable_list& inputs) {
   auto output = input.type().tensor(input.sizes());
 
   if (is_log) {
-      at::LogSoftMax_updateOutput(input, output, dim);
+    at::log_softmax_out(output, input, dim);
   } else {
-      at::SoftMax_updateOutput(input, output, dim);
+    at::softmax_out(output, input, dim);
   }
 
   // This gets a bit weird because we need to save the output...
@@ -56,9 +56,9 @@ variable_list SoftmaxBackwardBase<is_log>::apply(const variable_list& grad_outpu
 
   auto input = output.type().tensor(); // We don't save the input, because THNN doesn't use it anyway...
   if (is_log) {
-    at::LogSoftMax_updateGradInput(input, grad_output, grad_input, output, dim);
+    at::log_softmax_backward_out(grad_input, grad_output, input, dim, output);
   } else {
-    at::SoftMax_updateGradInput(input, grad_output, grad_input, output, dim);
+    at::softmax_backward_out(grad_input, grad_output, input, dim, output);
   }
 
   variable_list all_inputs {output_var, grad_output_var};

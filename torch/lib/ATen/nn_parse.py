@@ -145,6 +145,8 @@ def get_thnn_args(thnn_function, params):
         return {'type': 'EXPRESSION', 'name': expr}
 
     thnn_args = []
+    print(thnn_function.arguments)
+    print(params)
     for arg in thnn_function.arguments:
         name = arg.name
         if name == 'state':
@@ -220,6 +222,9 @@ def base_declaration(func, thnn_function, backends):
     """Creates the NN function without any buffers in it's signature"""
     name, params = re.match(NAME_PARAM_REGEX, func['name']).groups()
     params = params.split(', ')
+    print('-' * 80)
+    print(func)
+    print(params)
     arguments = [argument_to_declaration(a, func) for a in params]
     arguments += output_arguments(thnn_function)
     buffers = [argument_to_declaration('Tensor ' + buf)
